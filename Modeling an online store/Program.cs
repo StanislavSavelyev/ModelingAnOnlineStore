@@ -16,11 +16,12 @@
                 Console.WriteLine($"{Name} {Price}");
             }
         }
-        public class  Store
+        public class Store
         {
             public List<Product> Products { get; set; }
 
             public List<Product> Basket { get; set; }
+            public List<Order> Orders { get; set; }
             public Store()
             {
                 Products = new List<Product>
@@ -33,6 +34,7 @@
                     new Product("Йогурт", 120)
                 };
                 Basket = new List<Product>();
+                Orders = new List<Order>();
             }
             public void ShowCatalog()
             {
@@ -60,6 +62,30 @@
                     Console.Write(number + ". ");
                     product.Print();
                     number++;
+                }
+            }
+
+            public void CreateOrder()
+            {
+                //Передать в отдел доставки
+                var order = new Order(Basket);
+                Orders.Add(order);
+                Basket.Clear();
+            }
+        }
+
+        public class Order
+        {
+            public List<Product> Products { get; set; }
+
+            public decimal FullPrice { get; set; }
+            public Order(List<Product> products)
+            {
+                Products = products;
+
+                foreach (var product in products)
+                {
+                    FullPrice += product.Price;
                 }
             }
         }
@@ -99,7 +125,14 @@
             {
                 onlineStore.ShowBasket();
             }
-               
+
+            Console.WriteLine("Хотите оформить заказ? Введите Да или Нет.");
+            yes = IsYes(Console.ReadLine());
+            if (yes)
+            {
+                onlineStore.CreateOrder();
+            }
+
         }
 
         private static bool IsYes(string answer)
