@@ -11,6 +11,10 @@
                 Name = name;
                 Price = price;
             }
+            public void Print()
+            {
+                Console.WriteLine($"{Name} {Price}");
+            }
         }
         public class  Store
         {
@@ -26,6 +30,13 @@
                     new Product("Сок", 150),
                     new Product("Йогурт", 120)
                 };
+            }
+            public void ShowCatalog()
+            {
+                foreach (var product in Products)
+                {
+                    product.Print();
+                }
             }
         }
 
