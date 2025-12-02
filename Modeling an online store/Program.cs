@@ -88,7 +88,7 @@
                 {
                     onlineStore.ShowCatalog();
                     Console.WriteLine("Напишите номер продукта который нужно добавить в корзину");
-                    int productNumber = Convert.ToInt32(Console.ReadLine);
+                    int productNumber = Convert.ToInt32(Console.ReadLine());
                     onlineStore.AddToBasket(productNumber);
                 }
             }while (yes);
