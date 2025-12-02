@@ -68,9 +68,17 @@
             public void CreateOrder()
             {
                 //Передать в отдел доставки
-                var order = new Order(Basket);
-                Orders.Add(order);
-                Basket.Clear();
+                if (Basket.Count > 0)
+                {
+                    var order = new Order(Basket);
+                    Orders.Add(order);
+                    Basket.Clear();
+                    Console.WriteLine("Зака успешно создан");
+                }
+                else
+                {
+                    Console.WriteLine("Корзина пустая, сначала добавте товар, который хотите купить");
+                }
             }
         }
 
@@ -93,51 +101,52 @@
         static void Main(string[] args)
         {
             var onlineStore = new Store();
-
-            Console.WriteLine("Здравствуйте, выберите дейтвие:");
-            Console.WriteLine("1. Показать каталог продуктов?");
-            Console.WriteLine("Выберите номер действия который хотите совершить");
-
-            int number = Convert.ToInt32(Console.ReadLine());
-
-            switch (number)
+            while (true)
             {
-                case 1: onlineStore.ShowCatalog(); break;
-                default: Console.WriteLine("Выберите номер действия из списка"); break;
-            }
-            bool yes = false;
-            do
-            {
-                Console.WriteLine("Хотите добавить продукт в корзину? Введите Да или Нет.");
-                yes = IsYes(Console.ReadLine());
-                if (yes)
+                Console.WriteLine("Здравствуйте, выберите дейтвие:");
+                Console.WriteLine("1. Показать каталог продуктов?");
+                Console.WriteLine("2. Хотите добавить продукт в корзину?");
+                Console.WriteLine("3. Хотите посмотреть корзину?");
+                Console.WriteLine("4. Хотите оформить заказ?");
+                Console.WriteLine("Выберите номер действия который хотите совершить");
+
+                int number = Convert.ToInt32(Console.ReadLine());
+
+                switch (number)
                 {
-                    onlineStore.ShowCatalog();
-                    Console.WriteLine("Напишите номер продукта который нужно добавить в корзину");
-                    int productNumber = Convert.ToInt32(Console.ReadLine());
-                    onlineStore.AddToBasket(productNumber);
+                    case 1: onlineStore.ShowCatalog(); break;
+                    case 2:
+                        {
+                            string answer = string.Empty;
+                            do
+                            {
+                                onlineStore.ShowCatalog();
+                                Console.WriteLine("Напишите номер продукта который нужно добавить в корзину");
+                                int productNumber = Convert.ToInt32(Console.ReadLine());
+                                if (productNumber < 1 || productNumber > onlineStore.Products.Count)
+                                {
+                                    Console.WriteLine("Такой позиции не существует, попробуйте еще раз");
+                                    answer = "да";
+                                    continue;
+                                }
+                                onlineStore.AddToBasket(productNumber);
+                                Console.WriteLine("Хотите добавить еще товар? Введите Да или Нет");
+                                answer = Console.ReadLine().ToLower();
+
+                                while (answer != "нет" && answer != "да")
+                                {
+                                    Console.WriteLine("Не верные данные попробуйте еще раз");
+                                    answer = Console.ReadLine().ToLower();
+                                }
+                            } while (answer == "да");
+                        }
+                        break;
+                    case 3: onlineStore.ShowBasket(); break;
+                    case 4: onlineStore.CreateOrder(); break;
+                    default: Console.WriteLine("Выберите номер действия из списка"); break;
                 }
-            }while (yes);
 
-            Console.WriteLine("Хотите посмотреть корзину? Введите Да или Нет.");
-            yes = IsYes(Console.ReadLine());
-            if (yes)
-            {
-                onlineStore.ShowBasket();
             }
-
-            Console.WriteLine("Хотите оформить заказ? Введите Да или Нет.");
-            yes = IsYes(Console.ReadLine());
-            if (yes)
-            {
-                onlineStore.CreateOrder();
-            }
-
-        }
-
-        private static bool IsYes(string answer)
-        {
-            return answer.ToLower() == "да";   
         }
     }
 }
